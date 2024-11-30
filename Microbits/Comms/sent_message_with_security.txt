@@ -1,0 +1,16 @@
+from microbit import display, button_a, button_b
+import radio
+
+radio.on()
+radio.config(group=1)
+
+while True:
+    # Check if button A is pressed to send a message
+    if button_a.is_pressed():
+        radio.send("Hi!")
+        display.scroll("Sent!")
+    
+    # Check for incoming messages
+    message = radio.receive()
+    if message:
+        display.scroll(message)

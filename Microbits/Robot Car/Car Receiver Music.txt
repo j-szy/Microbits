@@ -1,0 +1,20 @@
+def on_received_number(receivedNumber):
+    if receivedNumber == 1:
+        kBit.led(KBitColor.GREEN)
+        kBit.led_brightness(100)
+        kBit.run(KBitDir.RUN_FORWARD, 40)
+        music.play_melody("C5 B A G F E D C ", 120)
+    if receivedNumber == 2:
+        kBit.run(KBitDir.RUN_BACK, 40)
+        kBit.led(KBitColor.BLUE)
+        music.play_melody("C5 A B G A F G E ", 120)
+    if receivedNumber == 3:
+        kBit.car_stop()
+        kBit.led(KBitColor.RED)
+    if receivedNumber == 4:
+        kBit.run(KBitDir.TURN_LEFT, 40)
+    if receivedNumber == 5:
+        kBit.run(KBitDir.TURN_RIGHT, 40)
+radio.on_received_number(on_received_number)
+
+radio.set_group(139)

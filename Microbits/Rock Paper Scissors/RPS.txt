@@ -1,0 +1,69 @@
+from microbit import button_a, display, Image, sleep
+import random
+import radio
+
+# Enable the radio
+radio.on()
+radio.config(channel=7)
+
+# Define images for Rock, Paper, Scissors
+rock = Image("99099:99099:00900:09090:90009")
+paper = Image("00000:09990:09990:09990:00000")
+scissors = Image("99999:99999:99999:99999:99999")
+
+# Mapping numbers to images and their names
+choices = {1: (rock, "rock"), 2: (paper, "paper"), 3: (scissors, "scissors")}
+
+# Initialize scores
+score = 0
+
+def determine_winner(choice1, choice2):
+    """Determine the winner based on the rules."""
+    if choice1 == choice2:
+        return "draw"
+    elif (choice1 == 1 and choice2 == 3) or (choice1 == 2 and choice2 == 1) or (choice1 == 3 and choice2 == 2):
+        return "win"
+    else:
+        return "lose"
+
+while True:
+    if button_a.is_pressed():
+        # Generate a random choice
+        my_choice = random.randint(1, 3)
+        my_image, my_choice_name = choices[my_choice]
+        display.show(my_image)
+        
+        # Small delay to ensure the image is displayed
+        sleep(1000)
+
+        # Send the choice to the other Micro:bit
+        radio.send(str(my_choice))
+
+        # Wait for the other Micro:bit's choice
+        other_choice = None
+        while other_choice is None:
+            incoming = radio.receive()
+            if incoming:
+                other_choice = int(incoming)
+
+        other_image, other_choice_name = choices[other_choice]
+
+        # Determine the winner
+        result = determine_winner(my_choice, other_choice)
+        if result == "win":
+            score += 1
+            display.show("W")
+        elif result == "lose":
+            display.show("L")
+        else:
+            display.show("D")
+
+        # Show the result for a moment before the score
+        sleep(1000)
+        
+        # Show the score
+        display.scroll("Score: {}".format(score))
+        
+        # Small delay to prevent immediate replay
+        sleep(2000)
+        display.clear()

@@ -1,0 +1,19 @@
+from microbit import display, button_a, button_b
+import radio
+
+# Turn on the radio
+radio.on()
+
+# Configure the radio with a unique group and channel
+radio.config(group=1, channel=7)  # group and channel must be the same on both micro:bits
+
+while True:
+    # Check if button A is pressed to send a message
+    if button_a.is_pressed():
+        radio.send("Hi!")
+        display.scroll("Sent!")
+    
+    # Check for incoming messages
+    message = radio.receive()
+    if message:
+        display.scroll(message)

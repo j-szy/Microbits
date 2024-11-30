@@ -1,0 +1,10 @@
+from microbit import display, Image, sleep, button_a, button_b
+import radio
+
+radio.on()
+radio.config(group=1)
+
+while True:
+    if button_a.is_pressed() or button_b.is_pressed():
+        radio.send("interrupt")
+        display.show(Image("90009:09090:00900:09090:90009"))
